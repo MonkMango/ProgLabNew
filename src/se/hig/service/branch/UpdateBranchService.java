@@ -11,11 +11,10 @@ import se.hig.repository.BranchDao;
  */
 
 public class UpdateBranchService extends AbstractBranchService {
-    public UpdateBranchService(BranchDao branchDao, Branch branch) {
-        super(branchDao, branch);
+
+    public UpdateBranchService(Branch completeBranch) {
+        super(completeBranch);
     }
-
-
 
     public Branch execute() {
         return branchDao.update(branch);

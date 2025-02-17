@@ -12,8 +12,9 @@ import se.hig.repository.BranchDao;
  */
 
 public class DeleteBranchService extends AbstractBranchService {
-    public DeleteBranchService(BranchDao branchDao, Branch branch) {
-        super(branchDao, branch);
+
+    public DeleteBranchService(Branch branch) {
+        super(branch);
     }
 
     public Branch execute() {

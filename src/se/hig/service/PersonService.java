@@ -17,6 +17,8 @@ public class PersonService {
 
    PersonDao personDao;
 
+   public PersonService() {this(new PersonDao());}
+
     public PersonService(PersonDao personDao) {
         this.personDao = personDao;
     }

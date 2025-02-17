@@ -15,11 +15,6 @@ import java.util.List;
 
 public class GetAllBranchService extends AbstractBranchService {
 
-
-    public GetAllBranchService(BranchDao branchDao, Branch branch) {
-        super(branchDao, branch);
-    }
-
     public List<Branch> execute() {
         return branchDao.getAll();
     }

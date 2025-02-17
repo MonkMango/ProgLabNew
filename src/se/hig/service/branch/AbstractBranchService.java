@@ -13,6 +13,19 @@ import se.hig.repository.BranchDao;
 abstract class AbstractBranchService implements BranchServiceInterface {
     BranchDao branchDao;
     Branch branch;
+
+    public AbstractBranchService() {
+        this(new BranchDao());
+    }
+
+    public AbstractBranchService(BranchDao branchDao) {
+        this(branchDao, null);
+    }
+
+    public AbstractBranchService(Branch branch) {
+        this(new BranchDao(), branch);
+    }
+
     public AbstractBranchService(BranchDao branchDao, Branch branch) {
         this.branchDao = branchDao;
         this.branch = branch;

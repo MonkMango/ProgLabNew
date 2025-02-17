@@ -13,9 +13,8 @@ import se.hig.repository.BranchDao;
 
 public class GetBranchService extends AbstractBranchService {
 
-
-    public GetBranchService(BranchDao branchDao, Branch branch) {
-        super(branchDao, branch);
+    public GetBranchService(Branch branch) {
+        super(branch);
     }
 
     public Branch execute() {

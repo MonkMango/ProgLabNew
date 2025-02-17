@@ -1,8 +1,10 @@
 package se.hig.main;
 
+import se.hig.domain.Branch;
 import se.hig.domain.Person;
 import se.hig.repository.PersonDao;
 import se.hig.service.PersonService;
+import se.hig.service.branch.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,7 +21,8 @@ public class Spike {
     public static void main(String[] args) throws SQLException {
 
         List<Person> peopleList = new ArrayList<>();
-        PersonService personService = new PersonService(new PersonDao());
+        PersonService personService = new PersonService();
+
         peopleList = personService.getAllPersons();
 
         System.out.println("List of people: ");
@@ -44,6 +47,30 @@ public class Spike {
 
         System.out.println("Deleting person: ");
         System.out.println(personService.deletePerson(completePerson));
+
+        System.out.println("List of branches: ");
+        List<Branch> branchList = new ArrayList<>();
+        branchList = new GetAllBranchService().execute();
+
+        for (Branch branch : branchList) {
+            System.out.println(branch);
+        }
+
+        System.out.println("Branch with ID 1: ");
+        System.out.println(new GetBranchService(branchList.get(0)));
+
+        System.out.println("Adding branch:");
+
+        Branch newBranch = new Branch("Vesuvio", "Newark");
+        Branch completeBranch = new SaveBranchService(newBranch).execute();
+        System.out.println(completeBranch);
+
+        System.out.println("Updating branch: ");
+        completeBranch.setName("Pizza Land");
+        System.out.println(new UpdateBranchService(completeBranch).execute());
+
+        System.out.println("Deleting branch: ");
+        System.out.println(new DeleteBranchService(completeBranch).execute());
 
     }
 }

@@ -12,8 +12,8 @@ import se.hig.repository.BranchDao;
 
 public class SaveBranchService extends AbstractBranchService {
 
-    public SaveBranchService(BranchDao branchDao, Branch branch) {
-        super(branchDao, branch);
+    public SaveBranchService(Branch newBranch) {
+        super(newBranch);
     }
 
     public Branch execute() {
