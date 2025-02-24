@@ -15,9 +15,9 @@ import java.util.List;
 
 public class PersonService {
 
-   PersonDao personDao;
+    private final PersonDao personDao;
 
-   public PersonService() {this(new PersonDao());}
+    public PersonService() {this(new PersonDao());}
 
     public PersonService(PersonDao personDao) {
         this.personDao = personDao;
