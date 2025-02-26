@@ -1,4 +1,4 @@
-package java;
+package domain;
 
 import se.hig.domain.Branch;
 

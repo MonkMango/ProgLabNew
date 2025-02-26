@@ -17,6 +17,10 @@ public class GetBranchService extends AbstractBranchService {
         super(branch);
     }
 
+    public GetBranchService(BranchDao branchDao, Branch branch) {
+        super(branchDao, branch);
+    }
+
     public Branch execute() {
         return branchDao.get(branch.getId());
     }
