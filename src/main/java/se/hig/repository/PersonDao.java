@@ -1,6 +1,7 @@
 package se.hig.repository;
 
 import se.hig.db.DbConnectionManager;
+import se.hig.domain.Branch;
 import se.hig.domain.Person;
 
 import java.sql.PreparedStatement;
@@ -27,18 +28,22 @@ public class PersonDao implements Dao<Person> {
 	DbConnectionManager dbConManagerSingleton = null;
 	
 	public PersonDao() {
-		dbConManagerSingleton = DbConnectionManager.getInstance();
+		this(DbConnectionManager.getInstance());
+	}
+
+	public PersonDao(DbConnectionManager dbConnMan) {
+		dbConManagerSingleton = dbConnMan;
 	}
 	
 	
 	public Person get(int id) throws NoSuchElementException {
 		Person student = null;
 		try{
-			ResultSet resultSet = dbConManagerSingleton.excecuteQuery("SELECT id, name, birth_year FROM lab_persons WHERE id=" + id);
+			ResultSet resultSet = dbConManagerSingleton.excecuteQuery("SELECT id, name, birth_year, branch FROM lab_persons WHERE id=" + id);
 			if( !resultSet.next())
 				throw new NoSuchElementException("The person with id " + id + " doesen't exist in database");
 			else
-				student = new Person(resultSet.getInt(1), resultSet.getString(2), resultSet.getInt(3));
+				student = new Person(resultSet.getInt(1), resultSet.getString(2), resultSet.getInt(3), (Branch) resultSet.getObject(4));
 			dbConManagerSingleton.close();
 		}
 		catch (SQLException e) {
@@ -53,11 +58,12 @@ public class PersonDao implements Dao<Person> {
 		ArrayList<Person> list = new ArrayList<>();
 		
 		try {
-			ResultSet resultSet = dbConManagerSingleton.excecuteQuery("SELECT id, name, birth_year FROM lab_persons");
+			ResultSet resultSet = dbConManagerSingleton.excecuteQuery("SELECT id, name, birth_year, branch FROM lab_persons");
 			while (resultSet.next()) {
 				list.add(new Person(resultSet.getInt(1), 
 									 resultSet.getString(2).trim(),
-									 resultSet.getInt(3))
+									 resultSet.getInt(3),
+						(Branch) resultSet.getObject(4))
 						);
 				
 			}
@@ -80,10 +86,11 @@ public class PersonDao implements Dao<Person> {
 			
 			//*******This is the main 'save' operation ***************************
 			preparedStatement = dbConManagerSingleton.prepareReturnStatement(
-											  "INSERT INTO lab_persons (name, birth_year) " +
-											  "VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
+											  "INSERT INTO lab_persons (name, birth_year, branch) " +
+											  "VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, t.getName());
 			preparedStatement.setInt(2, t.getBirthYear());
+			preparedStatement.setObject(3, t.getBranch());
 
 			preparedStatement.executeUpdate();
 			// ********************************************************************
@@ -94,7 +101,7 @@ public class PersonDao implements Dao<Person> {
 				if (resultSet.next()) {
 					int generatedId = resultSet.getInt(1);
 
-					savedPerson = new Person(generatedId, t.getName(), t.getBirthYear());
+					savedPerson = new Person(generatedId, t.getName(), t.getBirthYear(), t.getBranch());
 				}
 
 
@@ -120,18 +127,19 @@ public class PersonDao implements Dao<Person> {
 
 		try {
 			preparedStatement = dbConManagerSingleton.prepareStatement(
-					"UPDATE lab_persons SET name = ?, birth_year = ? WHERE id = ?",
+					"UPDATE lab_persons SET name = ?, birth_year = ?, branch = ? WHERE id = ?",
 					Statement.NO_GENERATED_KEYS
 			);
 			preparedStatement.setString(1, t.getName());
 			preparedStatement.setInt(2, t.getBirthYear());
 			preparedStatement.setInt(3, t.getId());
+			preparedStatement.setObject(4, t.getBranch());
 
 			rowsAffected = preparedStatement.executeUpdate();
 
 
 			if (rowsAffected > 0) {
-				return new Person(t.getId(), t.getName(), t.getBirthYear());
+				return new Person(t.getId(), t.getName(), t.getBirthYear(), t.getBranch());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -162,9 +170,10 @@ public class PersonDao implements Dao<Person> {
 			if (resultSet.next()) {
 				String name = resultSet.getString("name");
 				int birthYear = resultSet.getInt("birth_year");
+				Branch branch = (Branch) resultSet.getObject("branch");
 
 
-				deletedPerson = new Person(personId, name, birthYear);
+				deletedPerson = new Person(personId, name, birthYear, branch);
 			}
 
 

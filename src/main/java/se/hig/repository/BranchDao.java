@@ -3,6 +3,7 @@ package se.hig.repository;
 
 import se.hig.db.DbConnectionManager;
 import se.hig.domain.Branch;
+import se.hig.domain.Person;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -167,6 +168,33 @@ public class BranchDao implements Dao<Branch> {
             e.printStackTrace();
         }
         return deletedBranch;
+    }
+
+    public List<Person> getPersonsByBranchId(int branchId) {
+        List<Person> persons = new ArrayList<>();
+
+        try {
+            String query = "SELECT id, name, birthYear FROM persons WHERE branch_id = ?";
+            PreparedStatement preparedStatement = dbConManagerSingleton.prepareStatement(query, Statement.NO_GENERATED_KEYS);
+            preparedStatement.setInt(1, branchId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name").trim();
+                int birthYear = resultSet.getInt("birthYear");
+
+                // Create a Person object with the branch
+                Person person = new Person(id, name, birthYear, get(branchId));
+                persons.add(person);
+            }
+
+            dbConManagerSingleton.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return persons;
     }
 
 }

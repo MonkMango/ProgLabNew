@@ -1,11 +1,13 @@
 package java.domain;
 
+import se.hig.domain.Branch;
 import se.hig.domain.Person;
 
 import static org.junit.jupiter.api.Assertions.*;
 class PersonTest {
 
     Person p;
+    Branch b;
     String nullName;
     String emptyName;
     String longName;
@@ -14,7 +16,7 @@ class PersonTest {
 
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
-        p = new Person("Bada Bing", 1984);
+        p = new Person("Bada Bing", 1984, b);
         nullName = null;
         emptyName = "";
         longName = "Bada Bada Bada Bada Bada Bada Bada Bada Bada Bing";

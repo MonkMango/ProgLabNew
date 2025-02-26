@@ -14,14 +14,17 @@ public class Person {
     private int id;
     private String name;
     private int birthYear;
+    private Branch branch;
 
-    public Person(String name, int birthYear) {
+
+    public Person(String name, int birthYear, Branch branch) {
         setName(name);
         setBirthYear(birthYear);
+        setBranch(branch);
     }
 
-    public Person(int id, String name, int birthYear) {
-        this(name, birthYear);
+    public Person(int id, String name, int birthYear, Branch branch) {
+        this(name, birthYear, branch);
         setId(id);
     }
 
@@ -31,7 +34,7 @@ public class Person {
 
     public void setBirthYear(int birthYear) {
         if(birthYear < Year.now().getValue() -75 || birthYear > Year.now().getValue() - 16) {
-            throw new IllegalArgumentException("Birth year must be between 1800 and 2020");
+            throw new IllegalArgumentException("Employees must be between 75 and 16 years of age.");
         }
         else {
             this.birthYear = birthYear;
@@ -52,6 +55,14 @@ public class Person {
         }
 
         this.name = name;
+    }
+
+    public Branch getBranch() {
+        return branch;
+    }
+
+    public void setBranch(Branch branch) {
+        this.branch = branch;
     }
 
     private void setId(int id) {

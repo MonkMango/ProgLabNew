@@ -3,6 +3,7 @@ package service;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import se.hig.domain.Branch;
 import se.hig.domain.Person;
 import se.hig.repository.PersonDao;
 import se.hig.service.PersonService;
@@ -20,13 +21,15 @@ class PersonServiceTest {
 
     PersonService personService;
     PersonDao personDaoMock;
+    Branch testBranch = new Branch(1, "Bada Bong", "Newark");
+    Person testPerson = new Person(1, "Tony Soprano", 1999, testBranch);
 
     @BeforeEach
     void setUp() {
 
         personDaoMock = mock(PersonDao.class);
-        when(personDaoMock.getAll()).thenReturn(List.of(new Person(1, "Boris", 1999)));
-        when(personDaoMock.get(1)).thenReturn(new Person(1, "Boris", 1999));
+        when(personDaoMock.getAll()).thenReturn(List.of(testPerson));
+        when(personDaoMock.get(1)).thenReturn(testPerson);
 
         personService = new PersonService(personDaoMock);
     }
