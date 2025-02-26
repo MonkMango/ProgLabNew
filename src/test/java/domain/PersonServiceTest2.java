@@ -1,4 +1,5 @@
-package test;
+package java.domain;
+
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +10,9 @@ import se.hig.service.PersonService;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 class PersonServiceTest2 {
 
@@ -62,3 +65,7 @@ class PersonServiceTest2 {
 
     }
 }
+
+
+
+
