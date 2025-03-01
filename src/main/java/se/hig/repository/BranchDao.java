@@ -29,27 +29,24 @@ public class BranchDao implements Dao<Branch> {
     }
 
 
-    public Branch get(int id) throws NoSuchElementException {
+    public Branch get(int id) throws NoSuchElementException, SQLException {
         Branch branch = null;
-        try {
+         {
             ResultSet resultSet = dbConManagerSingleton.excecuteQuery("SELECT id, name, city FROM lab_branches WHERE id=" + id);
             if (!resultSet.next())
                 throw new NoSuchElementException("The branch with id " + id + " doesn't exist in database");
             else
                 branch = new Branch(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3));
-            dbConManagerSingleton.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
         return branch;
     }
 
-    public List<Branch> getAll() {
+    public List<Branch> getAll() throws SQLException {
 
         ArrayList<Branch> list = new ArrayList<>();
 
-        try {
+         {
             ResultSet resultSet = dbConManagerSingleton.excecuteQuery("SELECT id, name, city FROM lab_branches");
             while (resultSet.next()) {
                 list.add(new Branch(resultSet.getInt(1),
@@ -58,21 +55,18 @@ public class BranchDao implements Dao<Branch> {
                 );
 
             }
-            dbConManagerSingleton.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return list;
     }
 
-    public Branch save(Branch t) {
+    public Branch save(Branch t) throws SQLException {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         int rowCount = 0;
         boolean saveSucess = false;
         Branch savedBranch = null;
 
-        try {
+         {
 
 
             preparedStatement = dbConManagerSingleton.prepareReturnStatement(
@@ -93,13 +87,11 @@ public class BranchDao implements Dao<Branch> {
             }
 
 
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return savedBranch;
     }
 
-    public Branch update(Branch t) {
+    public Branch update(Branch t) throws SQLException {
         PreparedStatement preparedStatement = null;
         int rowsAffected = 0;
 
@@ -107,7 +99,7 @@ public class BranchDao implements Dao<Branch> {
             return null;
         }
 
-        try {
+         {
             preparedStatement = dbConManagerSingleton.prepareStatement(
                     "UPDATE lab_branches SET name = ?, city = ? WHERE id = ?",
                     Statement.NO_GENERATED_KEYS
@@ -122,15 +114,13 @@ public class BranchDao implements Dao<Branch> {
             if (rowsAffected > 0) {
                 return new Branch(t.getId(), t.getName(), t.getCity());
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
         return null;
     }
 
 
-    public Branch delete(Branch t) {
+    public Branch delete(Branch t) throws SQLException {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         Branch deletedBranch = null;
@@ -141,7 +131,7 @@ public class BranchDao implements Dao<Branch> {
 
         int branchId = t.getId();
 
-        try {
+         {
             preparedStatement = dbConManagerSingleton.prepareStatement(
                     "SELECT * FROM lab_branches WHERE id = ?", Statement.NO_GENERATED_KEYS
             );
@@ -164,16 +154,14 @@ public class BranchDao implements Dao<Branch> {
                 preparedStatement.setInt(1, branchId);
                 preparedStatement.executeUpdate();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return deletedBranch;
     }
 
-    public List<Person> getPersonsByBranchId(int branchId) {
+    public List<Person> getPersonsByBranchId(int branchId) throws SQLException {
         List<Person> persons = new ArrayList<>();
 
-        try {
+         {
             String query = "SELECT id, name, birthYear FROM persons WHERE branch_id = ?";
             PreparedStatement preparedStatement = dbConManagerSingleton.prepareStatement(query, Statement.NO_GENERATED_KEYS);
             preparedStatement.setInt(1, branchId);
@@ -188,13 +176,18 @@ public class BranchDao implements Dao<Branch> {
                 Person person = new Person(id, name, birthYear, get(branchId));
                 persons.add(person);
             }
-
-            dbConManagerSingleton.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
         return persons;
+    }
+
+
+    public void openConnection(){
+        dbConManagerSingleton.open();
+    }
+
+    public void closeConnection(){
+        dbConManagerSingleton.close();
     }
 
 }

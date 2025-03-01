@@ -36,9 +36,9 @@ public class PersonDao implements Dao<Person> {
 	}
 	
 	
-	public Person get(int id) throws NoSuchElementException {
+	public Person get(int id) throws NoSuchElementException, SQLException {
 		Person student = null;
-		try{
+		{
 			ResultSet resultSet = dbConManagerSingleton.excecuteQuery("SELECT id, name, birth_year, branch FROM lab_persons WHERE id=" + id);
 			if( !resultSet.next())
 				throw new NoSuchElementException("The person with id " + id + " doesen't exist in database");
@@ -46,18 +46,15 @@ public class PersonDao implements Dao<Person> {
 				student = new Person(resultSet.getInt(1), resultSet.getString(2), resultSet.getInt(3), (Branch) resultSet.getObject(4));
 			dbConManagerSingleton.close();
 		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
 		
 		return student;
 	}
 
-	public List<Person> getAll() {
+	public List<Person> getAll() throws SQLException {
 		
 		ArrayList<Person> list = new ArrayList<>();
 		
-		try {
+		{
 			ResultSet resultSet = dbConManagerSingleton.excecuteQuery("SELECT id, name, birth_year, branch FROM lab_persons");
 			while (resultSet.next()) {
 				list.add(new Person(resultSet.getInt(1), 
@@ -67,21 +64,18 @@ public class PersonDao implements Dao<Person> {
 						);
 				
 			}
-			dbConManagerSingleton.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		return list;
 	}
 
-	public Person save(Person t) {
+	public Person save(Person t) throws SQLException {
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		int rowCount = 0;
 		boolean saveSucess = false;
 		Person savedPerson = null;
 
-		try {
+		{
 
 			
 			//*******This is the main 'save' operation ***************************
@@ -106,9 +100,6 @@ public class PersonDao implements Dao<Person> {
 
 
 		}
-		catch ( SQLException e) {
-			e.printStackTrace();
-		}
 		return savedPerson;
 	}
 	/**
@@ -117,7 +108,7 @@ public class PersonDao implements Dao<Person> {
 	 * @param t - an instance of a Student with new values on attributes but 
 	 * an 'id' identical to an existing student in the DB
 	 */
-	public Person update(Person t) {
+	public Person update(Person t) throws SQLException {
 		PreparedStatement preparedStatement = null;
 		int rowsAffected = 0;
 
@@ -125,7 +116,7 @@ public class PersonDao implements Dao<Person> {
 			return null;
 		}
 
-		try {
+		 {
 			preparedStatement = dbConManagerSingleton.prepareStatement(
 					"UPDATE lab_persons SET name = ?, birth_year = ?, branch = ? WHERE id = ?",
 					Statement.NO_GENERATED_KEYS
@@ -141,15 +132,13 @@ public class PersonDao implements Dao<Person> {
 			if (rowsAffected > 0) {
 				return new Person(t.getId(), t.getName(), t.getBirthYear(), t.getBranch());
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 
 		return null;
 	}
 
 
-	public Person delete(Person t) {
+	public Person delete(Person t) throws SQLException {
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		Person deletedPerson = null;
@@ -160,7 +149,7 @@ public class PersonDao implements Dao<Person> {
 
 		int personId = t.getId();
 
-		try {
+		 {
 			preparedStatement = dbConManagerSingleton.prepareStatement(
 					"SELECT * FROM lab_persons WHERE id = ?", Statement.NO_GENERATED_KEYS
 			);
@@ -184,11 +173,16 @@ public class PersonDao implements Dao<Person> {
 				preparedStatement.setInt(1, personId);
 				preparedStatement.executeUpdate();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		return deletedPerson;
 	}
 
+	public void openConnection(){
+		dbConManagerSingleton.open();
+	}
+
+	public void closeConnection(){
+		dbConManagerSingleton.close();
+	}
 
 }

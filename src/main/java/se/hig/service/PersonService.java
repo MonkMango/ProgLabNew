@@ -23,24 +23,60 @@ public class PersonService {
         this.personDao = personDao;
     }
 
-    public List<Person> getAllPersons() {
-        return personDao.getAll();
+    public List<Person> getAllPersons() throws CleaningManagerServiceException {
+        try {
+            personDao.openConnection();
+            List<Person> personList = personDao.getAll();
+            personDao.closeConnection();
+            return personList;
+        } catch (SQLException e) {
+            throw new CleaningManagerServiceException("Failed to retrieve all persons", e);
+        }
     }
 
-    public Person getPerson(int id) throws SQLException {
-      return personDao.get(id);
+    public Person getPerson(int id) throws CleaningManagerServiceException {
+        try {
+            personDao.openConnection();
+            Person person = personDao.get(id);
+            personDao.closeConnection();
+            return person;
+        } catch (SQLException e) {
+            throw new CleaningManagerServiceException("Failed to retrieve person with ID: " + id, e);
+        }
     }
 
-    public Person savePerson(Person person) throws SQLException {
-        return personDao.save(person);
+    public Person savePerson(Person person) throws CleaningManagerServiceException {
+        try {
+            personDao.openConnection();
+            Person savedPerson = personDao.save(person);
+            personDao.closeConnection();
+            return savedPerson;
+        } catch (SQLException e) {
+            throw new CleaningManagerServiceException("Failed to save person", e);
+        }
     }
 
-    public Person updatePerson(Person person) {
-        return personDao.update(person);
+    public Person updatePerson(Person person) throws CleaningManagerServiceException {
+        try {
+            personDao.openConnection();
+            Person updatedPerson = personDao.update(person);
+            personDao.closeConnection();
+            return updatedPerson;
+        } catch (SQLException e) {
+            throw new CleaningManagerServiceException("Failed to update person", e);
+        }
     }
 
-    public Person deletePerson(Person person) {
-        return personDao.delete(person);
+    public Person deletePerson(Person person) throws CleaningManagerServiceException {
+        try {
+            personDao.openConnection();
+            Person deletedPerson = personDao.delete(person);
+            personDao.closeConnection();
+            return deletedPerson;
+        } catch (SQLException e) {
+            throw new CleaningManagerServiceException("Failed to delete person", e);
+        }
     }
+
 
 }

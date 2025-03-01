@@ -2,6 +2,9 @@ package se.hig.service.branch;
 
 import se.hig.domain.Branch;
 import se.hig.repository.BranchDao;
+import se.hig.service.CleaningManagerServiceException;
+
+import java.sql.SQLException;
 
 /**
  * Handles the save operation for Branch.
@@ -16,8 +19,16 @@ public class SaveBranchService extends AbstractBranchService {
         super(newBranch);
     }
 
-    public Branch execute() {
-        return branchDao.save(branch);
+    public Branch execute() throws CleaningManagerServiceException {
+        Branch savedBranch;
+        try {
+            branchDao.openConnection();
+            savedBranch = branchDao.save(branch);
+        } catch (SQLException e) {
+            throw new CleaningManagerServiceException("Failed to save branch", e);
+        } finally {
+            branchDao.closeConnection();
+        }
+        return savedBranch;
     }
-
 }

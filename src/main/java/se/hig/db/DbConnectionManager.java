@@ -54,12 +54,14 @@ public class DbConnectionManager {
      *
      * @return An instance of type java.sql.Connection
      */
-    private Connection getConnection() {
-        try {
-            connection = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
-            System.out.println("Connected to the database server successfully.");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+    public Connection open() {
+        if(connection == null) {
+            try {
+                connection = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
+                System.out.println("Connected to the database server successfully.");
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
         }
 
         return connection;
@@ -90,7 +92,7 @@ public class DbConnectionManager {
      * @throws SQLException
      */
     public ResultSet excecuteQuery(String sqlString) throws SQLException {
-        return this.getStatement(this.getConnection()).executeQuery(sqlString);
+        return this.getStatement(this.connection).executeQuery(sqlString);
     }
 
     /**
@@ -107,11 +109,11 @@ public class DbConnectionManager {
      * @throws SQLException
      */
     public PreparedStatement prepareReturnStatement(String statementString, int returnGeneratedKeys) throws SQLException {
-        return this.getConnection().prepareStatement(statementString, Statement.RETURN_GENERATED_KEYS);
+        return this.connection.prepareStatement(statementString, Statement.RETURN_GENERATED_KEYS);
     }
 
     public PreparedStatement prepareStatement(String statementString, int returnGeneratedKeys) throws SQLException {
-        return this.getConnection().prepareStatement(statementString, Statement.RETURN_GENERATED_KEYS);
+        return this.connection.prepareStatement(statementString, Statement.RETURN_GENERATED_KEYS);
     }
 
     public void close() {
@@ -121,6 +123,7 @@ public class DbConnectionManager {
             }
             if (connection != null) {
                 connection.close();
+                connection = null;
             }
             System.out.println("DB Connection closed");
         } catch (SQLException e) {

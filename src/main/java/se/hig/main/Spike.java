@@ -17,6 +17,8 @@ import java.util.List;
  * @version 2025
  */
 
+/*
+
 public class Spike {
     public static void main(String[] args) throws SQLException {
 
@@ -76,3 +78,5 @@ public class Spike {
 
     }
 }
+
+ */

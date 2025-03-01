@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import se.hig.domain.Branch;
 import se.hig.domain.Person;
 import se.hig.repository.PersonDao;
+import se.hig.service.CleaningManagerServiceException;
 import se.hig.service.PersonService;
 
 import java.sql.SQLException;
@@ -25,7 +26,7 @@ class PersonServiceTest {
     Person testPerson = new Person(1, "Tony Soprano", 1999, testBranch);
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws SQLException {
 
         personDaoMock = mock(PersonDao.class);
         when(personDaoMock.getAll()).thenReturn(List.of(testPerson));
@@ -41,7 +42,7 @@ class PersonServiceTest {
     }
 
     @Test
-    void getAllPersons() {
+    void getAllPersons() throws CleaningManagerServiceException, SQLException {
         List<Person> result = personService.getAllPersons();
         verify(personDaoMock, times(1)).getAll();
         assertTrue(result.get(0) instanceof Person);
@@ -49,7 +50,7 @@ class PersonServiceTest {
     }
 
     @Test
-    void getPerson() throws SQLException {
+    void getPerson() throws SQLException, CleaningManagerServiceException {
         Person result = personService.getPerson(1);
         //verify(personDaoMock, times(1));
         verify(personDaoMock, times(1)).get(1);

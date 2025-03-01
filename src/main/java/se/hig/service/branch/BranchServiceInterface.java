@@ -1,5 +1,7 @@
 package se.hig.service.branch;
 
+import se.hig.service.CleaningManagerServiceException;
+
 /**
  * Interface with a single method for the BranchServices to implement.
  *
@@ -8,5 +10,5 @@ package se.hig.service.branch;
  */
 
 public interface BranchServiceInterface {
-    <T> T execute();
+    <T> T execute() throws CleaningManagerServiceException;
 }
