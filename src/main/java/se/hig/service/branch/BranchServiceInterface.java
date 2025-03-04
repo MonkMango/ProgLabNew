@@ -1,5 +1,7 @@
 package se.hig.service.branch;
 
+import se.hig.db.DbConnectionManager;
+import se.hig.repository.DaoFactory;
 import se.hig.service.CleaningManagerServiceException;
 
 /**
@@ -10,5 +12,6 @@ import se.hig.service.CleaningManagerServiceException;
  */
 
 public interface BranchServiceInterface {
-    <T> T execute() throws CleaningManagerServiceException;
+    public <T> T execute() throws CleaningManagerServiceException;
+    public void init(DaoFactory factory);
 }

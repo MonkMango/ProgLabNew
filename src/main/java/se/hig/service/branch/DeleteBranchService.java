@@ -1,8 +1,10 @@
 package se.hig.service.branch;
 
 
+import se.hig.db.DbConnectionManager;
 import se.hig.domain.Branch;
 import se.hig.repository.BranchDao;
+import se.hig.repository.DaoFactory;
 import se.hig.service.CleaningManagerServiceException;
 
 import java.sql.SQLException;
@@ -23,14 +25,13 @@ public class DeleteBranchService extends AbstractBranchService {
     public Branch execute() throws CleaningManagerServiceException {
         Branch deletedBranch;
         try {
-            branchDao.openConnection();
-            deletedBranch = branchDao.delete(branch);
+            deletedBranch = factory.getBranchDao().delete(branch);
         } catch (SQLException e) {
             throw new CleaningManagerServiceException("Failed to delete branch", e);
-        } finally {
-            branchDao.closeConnection();
         }
         return deletedBranch;
     }
+
+
 
 }

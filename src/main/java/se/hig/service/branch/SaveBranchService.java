@@ -1,7 +1,9 @@
 package se.hig.service.branch;
 
+import se.hig.db.DbConnectionManager;
 import se.hig.domain.Branch;
 import se.hig.repository.BranchDao;
+import se.hig.repository.DaoFactory;
 import se.hig.service.CleaningManagerServiceException;
 
 import java.sql.SQLException;
@@ -22,13 +24,12 @@ public class SaveBranchService extends AbstractBranchService {
     public Branch execute() throws CleaningManagerServiceException {
         Branch savedBranch;
         try {
-            branchDao.openConnection();
-            savedBranch = branchDao.save(branch);
+            savedBranch = factory.getBranchDao().save(branch);
         } catch (SQLException e) {
             throw new CleaningManagerServiceException("Failed to save branch", e);
-        } finally {
-            branchDao.closeConnection();
         }
         return savedBranch;
     }
+
+
 }

@@ -2,14 +2,19 @@ package se.hig.repository;
 
 public class DaoFactory {
 
-    public Dao getPersonDao() {
+    public PersonDao getPersonDao() {
         return new PersonDao();
     }
 
-    public Dao getBranchDao() {
+    public BranchDao getBranchDao() {
         return new BranchDao();
     }
 
+    public < T extends Dao<?>> T get(FactoryType type){
+        return (T) type.createDao();
+    }
+
+    /*
     public Dao get(FactoryType type) {
         return switch(type){
             case PERSON -> new PersonDao();
@@ -17,9 +22,23 @@ public class DaoFactory {
         };
     }
 
+    */
+
     public enum FactoryType{
-        PERSON,
-        BRANCH
+        PERSON {
+            @Override
+            public PersonDao createDao() {
+                return new PersonDao();
+            }
+        },
+        BRANCH {
+            @Override
+            public BranchDao createDao() {
+                return new BranchDao();
+            }
+        };
+
+        public abstract Dao createDao();
     }
 
 }

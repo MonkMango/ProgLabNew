@@ -1,7 +1,9 @@
 package se.hig.service.branch;
 
+import se.hig.db.DbConnectionManager;
 import se.hig.domain.Branch;
 import se.hig.repository.BranchDao;
+import se.hig.repository.DaoFactory;
 import se.hig.service.CleaningManagerServiceException;
 
 import java.sql.SQLException;
@@ -22,12 +24,9 @@ public class UpdateBranchService extends AbstractBranchService {
     public Branch execute() throws CleaningManagerServiceException {
         Branch updatedBranch;
         try {
-            branchDao.openConnection();
-            updatedBranch = branchDao.update(branch);
+            updatedBranch = factory.getBranchDao().update(branch);
         } catch (SQLException e) {
             throw new CleaningManagerServiceException("Failed to update branch", e);
-        } finally {
-            branchDao.closeConnection();
         }
         return updatedBranch;
     }

@@ -4,9 +4,9 @@ import se.hig.db.DbConnectionManager;
 import se.hig.domain.Branch;
 import se.hig.domain.Person;
 import se.hig.repository.DaoFactory;
-import se.hig.repository.PersonDao;
 import se.hig.service.CleaningManagerServiceException;
 import se.hig.service.PersonService;
+import se.hig.service.ServiceRunner;
 import se.hig.service.branch.*;
 
 import java.sql.SQLException;
@@ -14,22 +14,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Main method demoing the different layers.
+ * Main class, demoing the other classes.
  *
  * @author Simon Fedko
  * @version 2025
  */
 
-/*
-
-public class Spike {
+public class Spike2 {
     public static void main(String[] args) throws SQLException, CleaningManagerServiceException {
+
+        ServiceRunner runner = new ServiceRunner();
 
         System.out.println("List of branches: ");
         List<Branch> branchList = new ArrayList<>();
         GetAllBranchService getAllBranchService = new GetAllBranchService();
-        getAllBranchService.init(new DaoFactory(), DbConnectionManager.getInstance());
-        branchList = getAllBranchService.execute();
+
+        branchList = runner.execute(getAllBranchService);
 
         for (Branch branch : branchList) {
             System.out.println(branch);
@@ -37,32 +37,31 @@ public class Spike {
 
         System.out.println("Branch with ID 1: ");
         GetBranchService getBranchService = new GetBranchService(branchList.get(0));
-        getBranchService.init(new DaoFactory(), DbConnectionManager.getInstance());
-        System.out.println(getBranchService.execute());
+        Branch gottenBranch = runner.execute(getBranchService);
+        System.out.println(gottenBranch);
 
         System.out.println("Adding branch:");
 
         Branch newBranch = new Branch("Vesuvio", "Newark");
         SaveBranchService saveBranchService = new SaveBranchService(newBranch);
-        saveBranchService.init(new DaoFactory(), DbConnectionManager.getInstance());
-        Branch completeBranch = saveBranchService.execute();
+        Branch completeBranch = runner.execute(saveBranchService);
         System.out.println(completeBranch);
 
         System.out.println("Updating branch: ");
         completeBranch.setName("Pizza Land");
         UpdateBranchService updateBranchService = new UpdateBranchService(completeBranch);
-        updateBranchService.init(new DaoFactory(), DbConnectionManager.getInstance());
-        System.out.println(updateBranchService.execute());
+        Branch updatedBranch = runner.execute(updateBranchService);
+        System.out.println(updatedBranch);
 
         System.out.println("Deleting branch: ");
         DeleteBranchService deleteBranchService = new DeleteBranchService(completeBranch);
-        deleteBranchService.init(new DaoFactory(), DbConnectionManager.getInstance());
-        System.out.println(deleteBranchService.execute());
+        Branch deletedBranch = runner.execute(deleteBranchService);
+        System.out.println(deletedBranch);
 
         List<Person> peopleList = new ArrayList<>();
         PersonService personService = new PersonService();
 
-
+    /*
         peopleList = personService.getAllPersons();
 
         System.out.println("List of people: ");
@@ -90,11 +89,7 @@ public class Spike {
         System.out.println("Deleting person: ");
         System.out.println(personService.deletePerson(completePerson));
 
-
+       */
 
     }
 }
-
- */
-
-

@@ -1,8 +1,10 @@
 package se.hig.service.branch;
 
 
+import se.hig.db.DbConnectionManager;
 import se.hig.domain.Branch;
 import se.hig.repository.BranchDao;
+import se.hig.repository.DaoFactory;
 import se.hig.service.CleaningManagerServiceException;
 
 import java.sql.SQLException;
@@ -20,22 +22,20 @@ public class GetBranchService extends AbstractBranchService {
         super(branch);
     }
 
-    public GetBranchService(BranchDao branchDao, Branch branch) {
-        super(branchDao, branch);
+    public GetBranchService(DaoFactory factory, Branch branch) {
+        super(factory, branch);
     }
 
     public Branch execute() throws CleaningManagerServiceException {
         Branch retrievedBranch;
         try {
-            branchDao.openConnection();
-            retrievedBranch = branchDao.get(branch.getId());
+            retrievedBranch = (Branch) factory.getBranchDao().get(branch.getId());
         } catch (SQLException e) {
             throw new CleaningManagerServiceException("Failed to retrieve branch", e);
-        } finally {
-            branchDao.closeConnection();
         }
         return retrievedBranch;
     }
+
 
 
 }
