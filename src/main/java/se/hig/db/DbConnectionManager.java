@@ -51,10 +51,8 @@ public class DbConnectionManager {
      * This method creates a connection to the database by a connection URL and
      * a user name and password. It is private because all DB specific is
      * contained within this class.
-     *
-     * @return An instance of type java.sql.Connection
      */
-    public Connection open() {
+    public void open() {
         if(connection == null) {
             try {
                 connection = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
@@ -64,7 +62,6 @@ public class DbConnectionManager {
             }
         }
 
-        return connection;
     }
 
     private Statement getStatement(Connection connection) {
@@ -120,6 +117,7 @@ public class DbConnectionManager {
         try {
             if (statement != null) {
                 statement.close();
+                statement = null;
             }
             if (connection != null) {
                 connection.close();

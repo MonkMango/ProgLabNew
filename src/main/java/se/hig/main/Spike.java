@@ -3,6 +3,7 @@ package se.hig.main;
 import se.hig.domain.Branch;
 import se.hig.domain.Person;
 import se.hig.repository.PersonDao;
+import se.hig.service.CleaningManagerServiceException;
 import se.hig.service.PersonService;
 import se.hig.service.branch.*;
 
@@ -17,10 +18,10 @@ import java.util.List;
  * @version 2025
  */
 
-/*
+
 
 public class Spike {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, CleaningManagerServiceException {
 
         System.out.println("List of branches: ");
         List<Branch> branchList = new ArrayList<>();
@@ -49,12 +50,15 @@ public class Spike {
         List<Person> peopleList = new ArrayList<>();
         PersonService personService = new PersonService();
 
+        /*
         peopleList = personService.getAllPersons();
 
         System.out.println("List of people: ");
         for (Person person : peopleList) {
             System.out.println(person);
         }
+
+
 
         System.out.println("Person with ID 1: ");
         System.out.println(personService.getPerson(1));
@@ -74,9 +78,9 @@ public class Spike {
         System.out.println("Deleting person: ");
         System.out.println(personService.deletePerson(completePerson));
 
-
+        */
 
     }
 }
 
- */
+

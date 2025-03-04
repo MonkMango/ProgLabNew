@@ -5,7 +5,10 @@ import org.junit.jupiter.api.Test;
 import se.hig.domain.Branch;
 import se.hig.domain.Person;
 import se.hig.repository.BranchDao;
+import se.hig.service.CleaningManagerServiceException;
 import se.hig.service.branch.GetBranchService;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,7 +22,7 @@ class GetBranchServiceTest {
     GetBranchService getBranchService = new GetBranchService(branchDaoMock, testBranch);
 
     @Test
-    void getBranchServiceExecute(){
+    void getBranchServiceExecute() throws SQLException, CleaningManagerServiceException {
         when(branchDaoMock.get(testBranch.getId())).thenReturn(testBranch);
         Branch result = getBranchService.execute();
         assertTrue(result instanceof Branch);
