@@ -8,7 +8,7 @@ public interface LoggerInterface {
 
     public static LoggerInterface get() {
         //return new BasicLogger();
-        return new Log4jLogger();
+        return new JavaApiLogger();
     }
 
 }
