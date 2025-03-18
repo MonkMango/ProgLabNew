@@ -24,7 +24,7 @@ public class SaveBranchService extends AbstractBranchService {
     public Branch execute() throws CleaningManagerServiceException {
         Branch savedBranch;
         try {
-            savedBranch = factory.getBranchDao().save(branch);
+            savedBranch = factory.getBranchDao().save(branch).orElseThrow();
         } catch (SQLException e) {
             throw new CleaningManagerServiceException("Failed to save branch", e);
         }

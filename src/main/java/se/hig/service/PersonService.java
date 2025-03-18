@@ -43,7 +43,7 @@ public class PersonService {
         Person person;
         try {
             DbConnectionManager.getInstance().open();
-            person = factory.getPersonDao().get(id);
+            person = factory.getPersonDao().get(id).orElseThrow();
 
         } catch (SQLException e) {
             throw new CleaningManagerServiceException("Failed to retrieve person with ID: " + id, e);
@@ -58,7 +58,7 @@ public class PersonService {
         Person savedPerson;
         try {
             DbConnectionManager.getInstance().open();
-            savedPerson = factory.getPersonDao().save(person);
+            savedPerson = factory.getPersonDao().save(person).orElseThrow();
         } catch (SQLException e) {
             throw new CleaningManagerServiceException("Failed to save person", e);
         }
@@ -72,7 +72,7 @@ public class PersonService {
         Person updatedPerson;
         try {
             DbConnectionManager.getInstance().open();
-            updatedPerson = factory.getPersonDao().update(person);
+            updatedPerson = factory.getPersonDao().update(person).orElseThrow();
         } catch (SQLException e) {
             throw new CleaningManagerServiceException("Failed to update person", e);
         }
@@ -86,7 +86,7 @@ public class PersonService {
         Person deletedPerson;
         try {
             DbConnectionManager.getInstance().open();
-            deletedPerson = factory.getPersonDao().delete(person);
+            deletedPerson = factory.getPersonDao().delete(person).orElseThrow();
         } catch (SQLException e) {
             throw new CleaningManagerServiceException("Failed to delete person", e);
         }

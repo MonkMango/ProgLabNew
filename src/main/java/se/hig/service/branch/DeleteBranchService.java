@@ -25,7 +25,7 @@ public class DeleteBranchService extends AbstractBranchService {
     public Branch execute() throws CleaningManagerServiceException {
         Branch deletedBranch;
         try {
-            deletedBranch = factory.getBranchDao().delete(branch);
+            deletedBranch = factory.getBranchDao().delete(branch).orElseThrow();
         } catch (SQLException e) {
             throw new CleaningManagerServiceException("Failed to delete branch", e);
         }

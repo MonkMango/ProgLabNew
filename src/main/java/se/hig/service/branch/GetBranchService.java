@@ -29,7 +29,7 @@ public class GetBranchService extends AbstractBranchService {
     public Branch execute() throws CleaningManagerServiceException {
         Branch retrievedBranch;
         try {
-            retrievedBranch = (Branch) factory.getBranchDao().get(branch.getId());
+            retrievedBranch = (Branch) factory.getBranchDao().get(branch.getId()).orElseThrow();
         } catch (SQLException e) {
             throw new CleaningManagerServiceException("Failed to retrieve branch", e);
         }

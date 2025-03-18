@@ -24,7 +24,7 @@ public class UpdateBranchService extends AbstractBranchService {
     public Branch execute() throws CleaningManagerServiceException {
         Branch updatedBranch;
         try {
-            updatedBranch = factory.getBranchDao().update(branch);
+            updatedBranch = factory.getBranchDao().update(branch).orElseThrow();
         } catch (SQLException e) {
             throw new CleaningManagerServiceException("Failed to update branch", e);
         }
