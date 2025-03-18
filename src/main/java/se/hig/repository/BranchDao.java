@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * Data Access Object for the Branch class.
@@ -29,7 +30,7 @@ public class BranchDao implements Dao<Branch> {
     }
 
 
-    public Branch get(int id) throws NoSuchElementException, SQLException {
+    public Optional<Branch> get(int id) throws NoSuchElementException, SQLException {
         Branch branch = null;
          {
             ResultSet resultSet = dbConManagerSingleton.excecuteQuery("SELECT id, name, city FROM lab_branches WHERE id=" + id);
@@ -39,7 +40,7 @@ public class BranchDao implements Dao<Branch> {
                 branch = new Branch(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3));
         }
 
-        return branch;
+        return Optional.ofNullable(branch);
     }
 
     public List<Branch> getAll() throws SQLException {
@@ -59,7 +60,7 @@ public class BranchDao implements Dao<Branch> {
         return list;
     }
 
-    public Branch save(Branch t) throws SQLException {
+    public Optional<Branch> save(Branch t) throws SQLException {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         int rowCount = 0;
@@ -88,10 +89,10 @@ public class BranchDao implements Dao<Branch> {
 
 
         }
-        return savedBranch;
+        return Optional.ofNullable(savedBranch);
     }
 
-    public Branch update(Branch t) throws SQLException {
+    public Optional<Branch> update(Branch t) throws SQLException {
         PreparedStatement preparedStatement = null;
         int rowsAffected = 0;
 
@@ -112,21 +113,21 @@ public class BranchDao implements Dao<Branch> {
 
 
             if (rowsAffected > 0) {
-                return new Branch(t.getId(), t.getName(), t.getCity());
+                return Optional.ofNullable(new Branch(t.getId(), t.getName(), t.getCity()));
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 
 
-    public Branch delete(Branch t) throws SQLException {
+    public Optional<Branch> delete(Branch t) throws SQLException {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         Branch deletedBranch = null;
 
         if (t == null) {
-            return null;
+            return Optional.empty();
         }
 
         int branchId = t.getId();
@@ -155,7 +156,7 @@ public class BranchDao implements Dao<Branch> {
                 preparedStatement.executeUpdate();
             }
         }
-        return deletedBranch;
+        return Optional.ofNullable(deletedBranch);
     }
 
     public List<Person> getPersonsByBranchId(int branchId) throws SQLException {
@@ -173,7 +174,7 @@ public class BranchDao implements Dao<Branch> {
                 int birthYear = resultSet.getInt("birthYear");
 
                 // Create a Person object with the branch
-                Person person = new Person(id, name, birthYear, get(branchId));
+                Person person = new Person(id, name, birthYear, get(branchId).orElseThrow());
                 persons.add(person);
             }
         }

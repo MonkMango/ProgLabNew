@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * DAO for the persistent handling of a Person object. It manages all
@@ -36,7 +37,7 @@ public class PersonDao implements Dao<Person> {
 	}
 	
 	
-	public Person get(int id) throws NoSuchElementException, SQLException {
+	public Optional<Person> get(int id) throws NoSuchElementException, SQLException {
 		Person student = null;
 		{
 			ResultSet resultSet = dbConManagerSingleton.excecuteQuery("SELECT id, name, birth_year, branch FROM lab_persons WHERE id=" + id);
@@ -47,7 +48,7 @@ public class PersonDao implements Dao<Person> {
 			dbConManagerSingleton.close();
 		}
 		
-		return student;
+		return Optional.ofNullable(student);
 	}
 
 	public List<Person> getAll() throws SQLException {
@@ -68,7 +69,7 @@ public class PersonDao implements Dao<Person> {
 		return list;
 	}
 
-	public Person save(Person t) throws SQLException {
+	public Optional<Person> save(Person t) throws SQLException {
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		int rowCount = 0;
@@ -100,7 +101,7 @@ public class PersonDao implements Dao<Person> {
 
 
 		}
-		return savedPerson;
+		return Optional.ofNullable(savedPerson);
 	}
 	/**
 	 * This method uses a temporary Student set with the desired changed values.
@@ -108,12 +109,12 @@ public class PersonDao implements Dao<Person> {
 	 * @param t - an instance of a Student with new values on attributes but 
 	 * an 'id' identical to an existing student in the DB
 	 */
-	public Person update(Person t) throws SQLException {
+	public Optional<Person> update(Person t) throws SQLException {
 		PreparedStatement preparedStatement = null;
 		int rowsAffected = 0;
 
 		if (t == null || t.getId() <= 0) {
-			return null;
+			return Optional.empty();
 		}
 
 		 {
@@ -130,21 +131,21 @@ public class PersonDao implements Dao<Person> {
 
 
 			if (rowsAffected > 0) {
-				return new Person(t.getId(), t.getName(), t.getBirthYear(), t.getBranch());
+				return Optional.ofNullable(new Person(t.getId(), t.getName(), t.getBirthYear(), t.getBranch()));
 			}
 		}
 
-		return null;
+		return Optional.empty();
 	}
 
 
-	public Person delete(Person t) throws SQLException {
+	public Optional<Person> delete(Person t) throws SQLException {
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		Person deletedPerson = null;
 
 		if (t == null) {
-			return null;
+			return Optional.empty();
 		}
 
 		int personId = t.getId();
@@ -174,7 +175,7 @@ public class PersonDao implements Dao<Person> {
 				preparedStatement.executeUpdate();
 			}
 		}
-		return deletedPerson;
+		return Optional.ofNullable(deletedPerson);
 	}
 
 	public void openConnection(){
