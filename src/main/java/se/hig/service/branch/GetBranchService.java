@@ -36,6 +36,4 @@ public class GetBranchService extends AbstractBranchService {
         return retrievedBranch;
     }
 
-
-
 }

@@ -11,6 +11,7 @@ import se.hig.service.PersonService;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,9 +31,9 @@ class PersonServiceTest {
 
         personDaoMock = mock(PersonDao.class);
         when(personDaoMock.getAll()).thenReturn(List.of(testPerson));
-        when(personDaoMock.get(1)).thenReturn(testPerson);
+        when(personDaoMock.get(1)).thenReturn(Optional.ofNullable(testPerson));
 
-        personService = new PersonService(personDaoMock);
+       // personService = new PersonService(personDaoMock);
     }
 
     @AfterEach

@@ -32,6 +32,4 @@ public class DeleteBranchService extends AbstractBranchService {
         return deletedBranch;
     }
 
-
-
 }

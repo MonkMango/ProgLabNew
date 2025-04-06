@@ -60,7 +60,7 @@ class PersonDaoTest {
         when(resultSetMock.getObject(4)).thenReturn(testBranch);
 
 
-        Person person = personDao.get(1);
+        Person person = personDao.get(1).orElseThrow();
 
 
         assertNotNull(person);
@@ -95,7 +95,7 @@ class PersonDaoTest {
         Branch testBranch = new Branch(1, "Sing Sing", "New York");
         Person newPerson = new Person("Feech LaMana", 1962, testBranch);
 
-        Person savedPerson = personDao.save(newPerson);
+        Person savedPerson = personDao.save(newPerson).orElseThrow();
 
         assertNotNull(savedPerson);
         assertEquals(1, savedPerson.getId());
